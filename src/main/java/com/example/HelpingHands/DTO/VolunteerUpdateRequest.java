@@ -15,5 +15,6 @@ public class VolunteerUpdateRequest {
     private String phone;
     private String address;
     private String profile;
+    private String bio;
     private Set<String> interests;
 }
