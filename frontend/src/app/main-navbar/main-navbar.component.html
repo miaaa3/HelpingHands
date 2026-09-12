@@ -115,28 +115,52 @@
           {{ unreadCount > 9 ? '9+' : unreadCount }}
         </span>
       </button>
-      <div class="dropdown-panel origin-top-right absolute top-12 right-0 w-64 sm:w-72 overflow-hidden bg-white rounded-xl shadow-lg border border-gray-100"
+      <div class="dropdown-panel origin-top-right absolute top-12 right-0 w-72 sm:w-80 overflow-hidden bg-white rounded-xl shadow-lg border border-gray-100"
            [class.dropdown-open]="showDropdownNotif">
-        <div class="py-2">
-          <p *ngIf="notifications.length === 0 && pendingRequests.length === 0" class="px-4 py-3 text-sm text-gray-500">You're all caught up.</p>
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+          <h3 class="text-sm font-bold text-gray-900">Notifications</h3>
+          <span *ngIf="unreadCount > 0" class="text-[11px] font-semibold text-green bg-green/10 px-2 py-0.5 rounded-full">{{ unreadCount }} new</span>
+        </div>
+
+        <div class="max-h-96 overflow-y-auto">
+          <!-- Empty state -->
+          <div *ngIf="notifications.length === 0 && pendingRequests.length === 0" class="flex flex-col items-center justify-center px-4 py-10 text-center">
+            <svg class="w-10 h-10 text-gray-300 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <p class="text-sm text-gray-500">You're all caught up</p>
+          </div>
+
+          <!-- Follow requests summary -->
           <a *ngIf="pendingRequests.length" routerLink="/notifications" (click)="showDropdownNotif = false"
-             class="flex items-center px-4 py-3 border-b last:border-b-0 border-gray-100 hover:bg-gray-100 transition-colors cursor-pointer">
-              <span class="h-8 w-8 rounded-full bg-green/10 text-green flex items-center justify-center mr-2 flex-shrink-0 font-bold text-sm">{{ pendingRequests.length }}</span>
-              <p class="text-gray-600 text-sm">
-                  <span class="font-bold">{{ pendingRequests.length }} follow request{{ pendingRequests.length > 1 ? 's' : '' }}</span> waiting for review
+             class="flex items-center gap-3 px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer">
+              <span class="h-9 w-9 rounded-full bg-green/10 text-green flex items-center justify-center flex-shrink-0 font-bold text-sm">{{ pendingRequests.length }}</span>
+              <p class="text-sm text-gray-700 leading-snug flex-1 min-w-0">
+                  <span class="font-semibold">{{ pendingRequests.length }} follow request{{ pendingRequests.length > 1 ? 's' : '' }}</span> waiting for review
               </p>
+              <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
           </a>
+
+          <!-- Notifications -->
           <a *ngFor="let notification of notifications" (click)="openNotification(notification)"
-             class="flex items-center px-4 py-3 border-b last:border-b-0 border-gray-100 hover:bg-gray-100 transition-colors cursor-pointer"
+             class="flex items-start gap-3 px-4 py-3 border-b last:border-b-0 border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
              [ngClass]="notification.isRead ? '' : 'bg-green/5'">
-              <app-avatar [src]="notification.actorProfile" [name]="notification.actorName" sizeClass="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0"></app-avatar>
-              <p class="text-gray-600 text-sm">
-                  <span class="font-bold">{{notification.actorName}}</span> {{notification.message}}
-              </p>
-              <span *ngIf="!notification.isRead" class="ml-auto h-2 w-2 rounded-full bg-green flex-shrink-0"></span>
+              <app-avatar [src]="notification.actorProfile" [name]="notification.actorName" sizeClass="w-9 h-9 rounded-full object-cover flex-shrink-0"></app-avatar>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm text-gray-700 leading-snug">
+                    <span class="font-semibold">{{notification.actorName}}</span>{{notification.message}}
+                </p>
+                <p class="text-xs text-gray-400 mt-0.5">{{ notification.createdAt | date:'MMM d, h:mm a' }}</p>
+              </div>
+              <span *ngIf="!notification.isRead" class="mt-1.5 h-2 w-2 rounded-full bg-green flex-shrink-0"></span>
           </a>
         </div>
-        <a routerLink="/notifications" (click)="showDropdownNotif = false" class="block bg-green hover:bg-green-dark text-white text-center font-bold py-2 transition-colors">See all notifications</a>
+
+        <a routerLink="/notifications" (click)="showDropdownNotif = false" class="block bg-green hover:bg-green-dark text-white text-center text-sm font-semibold py-2.5 transition-colors">See all notifications</a>
       </div>
     </div>
     <!-- END NOTIFICATIONS -->
