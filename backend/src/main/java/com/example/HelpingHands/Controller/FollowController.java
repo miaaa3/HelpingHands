@@ -2,6 +2,7 @@ package com.example.HelpingHands.Controller;
 
 import com.example.HelpingHands.DTO.FollowDTO;
 import com.example.HelpingHands.DTO.PendingRequestDTO;
+import com.example.HelpingHands.DTO.FollowUserDTO;
 import com.example.HelpingHands.Entity.Follow;
 import com.example.HelpingHands.Entity.FollowStatus;
 import com.example.HelpingHands.Entity.UserEntity;
@@ -63,6 +64,20 @@ public class FollowController {
             followDTO.setStatus("PENDING");
             return ResponseEntity.ok(followDTO);
         }
+    }
+
+    /** Accepted followers of any user (for the clickable "Followers" count). */
+    @GetMapping("/followers/{userId}")
+    public ResponseEntity<List<FollowUserDTO>> followersOf(@PathVariable Long userId) {
+        UserEntity target = userService.getUser(userId);
+        if (target == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(followService.getFollowers(target).stream().map(FollowUserDTO::from).toList());
+    }
+
+    /** Accepted accounts a user follows (for the clickable "Following" count). */
+    @GetMapping("/following/{userId}")
+    public ResponseEntity<List<FollowUserDTO>> followingOf(@PathVariable Long userId) {
+        return ResponseEntity.ok(followService.getFollowing(userId).stream().map(FollowUserDTO::from).toList());
     }
 
     /** Get all pending follow requests for the authenticated user. */

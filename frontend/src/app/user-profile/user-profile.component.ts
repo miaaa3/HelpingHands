@@ -53,6 +53,10 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   private readonly pageSize = 10;
   private page = 0;
   private profileUserId = 0;
+  showFollowModal = false;
+  followModalTitle = '';
+  followModalUsers: User[] = [];
+  followModalLoading = false;
   hasMorePosts = true;
 
   private routeSub?: Subscription;
@@ -112,6 +116,27 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     });
 
     this.loadPosts(userId);
+  }
+
+  /** Opens the Followers/Following list modal for this profile. */
+  openFollowList(kind: 'followers' | 'following'): void {
+    const title = kind === 'followers' ? 'Followers' : 'Following';
+    if (this.showFollowModal && this.followModalTitle === title) { this.showFollowModal = false; return; }
+    this.followModalTitle = title;
+    this.followModalUsers = [];
+    this.followModalLoading = true;
+    this.showFollowModal = true;
+    const req$ = kind === 'followers'
+      ? this.followService.getFollowersByUser(this.profileUserId)
+      : this.followService.getFollowingByUser(this.profileUserId);
+    req$.subscribe({
+      next: (users) => { this.followModalUsers = users || []; this.followModalLoading = false; },
+      error: () => { this.followModalLoading = false; }
+    });
+  }
+
+  closeFollowModal(): void {
+    this.showFollowModal = false;
   }
 
   /** Loads this profile's posts page by page. Pass reset=true to reload from the first page. */

@@ -32,6 +32,16 @@ export class FollowService {
     return this.http.get<User[]>(`${this.followUrl}/getFollowing`);
   }
 
+  /** Accepted followers of any user (by id). */
+  getFollowersByUser(userId: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.followUrl}/followers/${userId}`);
+  }
+
+  /** Accepted accounts a user follows (by id). */
+  getFollowingByUser(userId: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.followUrl}/following/${userId}`);
+  }
+
   follow(userId: number): Observable<FollowResponse> {
     const formData = new FormData();
     formData.append('userId', '' + userId);

@@ -116,18 +116,38 @@
             <div class="font-bold text-lg text-gray-900">{{ posts.length }}</div>
             <div class="text-gray-500 text-xs">Posts</div>
           </div>
-          <div class="text-center">
+          <button type="button" (click)="openFollowList('followers')" class="text-center hover:opacity-70 transition-opacity">
             <div class="font-bold text-lg text-gray-900">{{ numberOfFollowers }}</div>
             <div class="text-gray-500 text-xs">Followers</div>
-          </div>
-          <div class="text-center">
+          </button>
+          <button type="button" (click)="openFollowList('following')" class="text-center hover:opacity-70 transition-opacity">
             <div class="font-bold text-lg text-gray-900">{{ numberOfFollowing }}</div>
             <div class="text-gray-500 text-xs">Following</div>
-          </div>
+          </button>
         </div>
       </div>
     </div>
     <!--END PROFILE CARD-->
+
+    <!--FOLLOWERS / FOLLOWING INLINE PANEL-->
+    <div *ngIf="showFollowModal" class="animate-slide-down bg-white-chalk rounded-xl shadow-md overflow-hidden">
+      <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
+        <h3 class="font-bold text-gray-900">{{ followModalTitle }}</h3>
+        <button type="button" (click)="closeFollowModal()" class="text-sm font-medium text-gray-400 hover:text-gray-700">Close</button>
+      </div>
+      <div class="p-2 max-h-80 overflow-y-auto">
+        <p *ngIf="followModalLoading" class="text-center text-sm text-gray-500 py-6">Loading…</p>
+        <p *ngIf="!followModalLoading && followModalUsers.length === 0" class="text-center text-sm text-gray-500 py-6">No one yet.</p>
+        <a *ngFor="let u of followModalUsers" [routerLink]="['/user-profile', u.id]" (click)="closeFollowModal()"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+          <app-avatar [src]="u.profile" [name]="u.name" sizeClass="w-10 h-10 rounded-full object-cover flex-shrink-0"></app-avatar>
+          <div class="min-w-0">
+            <div class="text-sm font-medium text-gray-900 capitalize truncate">{{ u.name }}</div>
+            <div class="text-xs text-gray-500 capitalize">{{ u.role | lowercase }}</div>
+          </div>
+        </a>
+      </div>
+    </div>
 
     <!--ABOUT / DETAILS-->
     <div class="bg-white rounded-2xl shadow-md p-5">
