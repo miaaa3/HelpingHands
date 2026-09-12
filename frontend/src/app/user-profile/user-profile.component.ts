@@ -31,6 +31,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isFollowing = false;
   isOwnProfile = true;
   followStatus: 'NONE' | 'PENDING' | 'ACCEPTED' = 'NONE';
+  followsYou = false;
 
   loading = true;
   error = false;
@@ -96,6 +97,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.isOwnProfile = isOwn ? true : !!data.ownProfile;
         this.isFollowing = isOwn ? false : !!data.following;
         this.followStatus = isOwn ? 'NONE' : (data.followStatus || 'NONE') as any;
+        this.followsYou = isOwn ? false : !!data.followsYou;
         this.loading = false;
 
         if (this.isOrganization && this.user.id) {
@@ -191,6 +193,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   get followButtonLabel(): string {
     if (this.followStatus === 'ACCEPTED') return 'Following';
     if (this.followStatus === 'PENDING') return 'Pending';
+    if (this.followsYou) return 'Follow Back';
     return 'Follow';
   }
 

@@ -57,7 +57,7 @@ public class FollowController {
         } else {
             // Send a new follow request (PENDING)
             Follow created = followService.createFollow(follower, following);
-            notificationService.createFollowNotification(follower, created);
+            // No "started following" notification yet — the request shows under Follow Requests until accepted.
             followDTO.setFollow(created);
             followDTO.setFollowed(false); // not yet accepted
             followDTO.setStatus("PENDING");
@@ -90,6 +90,8 @@ public class FollowController {
         if (accepted == null) {
             return ResponseEntity.notFound().build();
         }
+        // Now that it's accepted, notify that the follower is following you.
+        notificationService.createFollowNotification(accepted.getFollower(), accepted);
         return ResponseEntity.ok(Map.of("accepted", true, "followId", followId));
     }
 

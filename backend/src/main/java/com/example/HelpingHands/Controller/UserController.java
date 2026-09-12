@@ -101,6 +101,8 @@ public class UserController {
                 profileDTO.setFollowStatus(existingFollow.getStatus().name());
                 profileDTO.setFollowing(existingFollow.getStatus() == FollowStatus.ACCEPTED);
             }
+            // Does the person whose profile this is already follow the viewer?
+            profileDTO.setFollowsYou(followService.isFollowing(target, currentUser));
         }
 
         return ResponseEntity.ok(profileDTO);

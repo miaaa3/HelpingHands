@@ -15,4 +15,6 @@ public class PublicProfileDTO {
     private boolean ownProfile;
     /** "PENDING" if a follow request is awaiting acceptance, "ACCEPTED" if following, null otherwise. */
     private String followStatus;
+    /** Whether this profile's user already follows the requesting user (drives the "Follow Back" label). */
+    private boolean followsYou;
 }

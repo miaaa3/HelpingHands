@@ -44,7 +44,8 @@ export class NotificationsComponent implements OnInit {
     this.followService.acceptRequest(request.id).subscribe({
       next: () => {
         this.pendingRequests = this.pendingRequests.filter(r => r.id !== request.id);
-        this.toastr.success(`You are now following ${request.follower.name}!`);
+        this.toastr.success(`${request.follower.name} is now following you!`);
+        this.loadNotifications(true);
       },
       error: (err) => console.error('Error accepting request:', err)
     });
