@@ -90,8 +90,11 @@ export class ChatWindowComponent implements OnInit, OnChanges, AfterViewChecked,
       return;
     }
 
-    this.chatService.sendMessage({ receiverId: this.otherUserId, content });
     this.newMessage = '';
+    this.chatService.sendMessage({ receiverId: this.otherUserId, content }).subscribe({
+      next: (msg) => this.addMessage(msg),
+      error: (err) => console.error('Error sending message:', err)
+    });
   }
 
   isMine(message: MessageResponse): boolean {

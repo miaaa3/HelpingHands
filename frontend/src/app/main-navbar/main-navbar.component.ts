@@ -5,9 +5,10 @@ import { UserService } from '../services/user.service';
 import { follow } from '../models/follow';
 import { SearchResult } from '../models/searchResult';
 import { FollowService, PendingRequest } from '../services/follow.service';
+import { ChatService } from '../services/chat.service';
 import { HomeComponent } from '../home/home.component';
 import { Notification } from '../models/notification';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { TokenStorageService } from '../services/token-storage.service';
 import { NotificationService } from '../services/notification.service';
 import { Subject, Subscription } from 'rxjs';
@@ -28,6 +29,7 @@ export class MainNavbarComponent implements OnInit, OnDestroy {
   followStatus: any;
   notifications: Notification[]= [];
   pendingRequests: PendingRequest[] = [];
+  unreadMessages = 0;
   unreadCount = 0;
   currentUser: Volunteer = {} as Volunteer;
   highlightedIndex = -1;
@@ -38,6 +40,7 @@ export class MainNavbarComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private followService: FollowService,
+    private chatService: ChatService,
     private notificationService: NotificationService,
     private router: Router,
     private tokenStorage: TokenStorageService,
@@ -47,6 +50,10 @@ export class MainNavbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getNotif();
     this.getPendingReq();
+    this.getUnreadMessages();
+    // Keep the badge live: refresh on incoming messages and whenever the route changes (covers reading a chat).
+    this.chatService.messages$.subscribe(() => this.getUnreadMessages());
+    this.router.events.subscribe((e) => { if (e instanceof NavigationEnd) this.getUnreadMessages(); });
     this.getCurrentUser();
 
     // Debounce keystrokes so we don't hit the backend on every character typed.
@@ -185,6 +192,14 @@ export class MainNavbarComponent implements OnInit, OnDestroy {
     this.followService.getPendingRequests().subscribe({
       next: (reqs) => this.pendingRequests = reqs || [],
       error: () => this.pendingRequests = []
+    });
+  }
+
+  /** Sums unread messages across conversations for the Messages badge. */
+  getUnreadMessages(){
+    this.chatService.getConversations().subscribe({
+      next: (convs) => this.unreadMessages = (convs || []).reduce((n, c) => n + (c.unreadCount || 0), 0),
+      error: () => this.unreadMessages = 0
     });
   }
 

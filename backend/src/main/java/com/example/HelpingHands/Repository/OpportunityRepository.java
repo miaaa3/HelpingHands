@@ -50,17 +50,15 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Long> 
     List<Opportunity> findRecommended(@Param("categories") java.util.Collection<OpportunityCategory> categories);
 
     /** Verified organizations that posted OPEN opportunities in the given categories, most matches first. */
-    @Query("SELECT o.organization FROM Opportunity o " +
+    @Query("SELECT DISTINCT o.organization FROM Opportunity o " +
             "WHERE o.category IN :categories " +
             "AND o.status = com.example.HelpingHands.Entity.OpportunityStatus.OPEN " +
-            "AND o.organization.verificationStatus = com.example.HelpingHands.Entity.OrganizationVerificationStatus.VERIFIED " +
-            "GROUP BY o.organization ORDER BY COUNT(o) DESC")
+            "AND o.organization.verificationStatus = com.example.HelpingHands.Entity.OrganizationVerificationStatus.VERIFIED")
     List<Organization> findSuggestedOrganizationsByCategories(@Param("categories") Set<OpportunityCategory> categories);
 
     /** Fallback: most active verified organizations overall. */
-    @Query("SELECT o.organization FROM Opportunity o " +
+    @Query("SELECT DISTINCT o.organization FROM Opportunity o " +
             "WHERE o.status = com.example.HelpingHands.Entity.OpportunityStatus.OPEN " +
-            "AND o.organization.verificationStatus = com.example.HelpingHands.Entity.OrganizationVerificationStatus.VERIFIED " +
-            "GROUP BY o.organization ORDER BY COUNT(o) DESC")
+            "AND o.organization.verificationStatus = com.example.HelpingHands.Entity.OrganizationVerificationStatus.VERIFIED")
     List<Organization> findMostActiveOrganizations();
 }

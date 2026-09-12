@@ -83,11 +83,8 @@ export class ChatService {
     this.connectionState.next('disconnected');
   }
 
-  /** Sends a chat message over the active STOMP connection. */
-  sendMessage(request: MessageRequest): void {
-    this.client?.publish({
-      destination: '/app/chat.send',
-      body: JSON.stringify(request)
-    });
+  /** Sends a chat message over HTTP so it persists even when the socket is down. */
+  sendMessage(request: MessageRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.messagesUrl}/send`, request);
   }
 }

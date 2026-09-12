@@ -56,6 +56,20 @@ public class MessageController {
      * then pushes it to both the sender's and receiver's private
      * "/user/{email}/queue/messages" destinations for real-time delivery.
      */
+    /**
+     * HTTP send path: persists the message reliably (independent of the WebSocket),
+     * pushes it to the receiver for real-time delivery, and returns it to the sender.
+     * This is the primary send path so messaging works even when the socket is down.
+     */
+    @PostMapping("/send")
+    public ResponseEntity<MessageResponse> sendMessageHttp(@RequestBody MessageRequest request, Principal principal) {
+        MessageResponse response = messageService.sendMessage(principal.getName(), request);
+        userRepository.findById(response.getReceiverId())
+                .ifPresent(receiver -> messagingTemplate.convertAndSendToUser(
+                        receiver.getEmail(), "/queue/messages", response));
+        return ResponseEntity.ok(response);
+    }
+
     @MessageMapping("/chat.send")
     public void sendMessage(MessageRequest request, Principal principal) {
         MessageResponse response = messageService.sendMessage(principal.getName(), request);
