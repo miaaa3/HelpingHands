@@ -62,6 +62,9 @@ public class PostServiceImpl implements PostService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User with ID " + userId + " not found"));
         Post post = new Post(content, user);
+        // Persist the post first so it has an ID before media rows reference it
+        // (otherwise saving a MediaPost points at an unsaved/transient post -> 500).
+        post = postRepository.save(post);
         Set<MediaPost> mediaList = new HashSet<>();
 
         for (MultipartFile file : files) {
