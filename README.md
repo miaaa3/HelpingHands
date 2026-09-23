@@ -37,13 +37,15 @@ All demo accounts share the password `Password123!`. Sample data seeds automatic
 
 ## Features
 
-**Volunteers** browse and search opportunities, apply to them, follow organizations and other users, post to a social feed with likes and comments, message organizations in real time, and donate.
+**Volunteers** browse and search opportunities, get personalized recommendations and suggested organizations based on their interests, apply to opportunities, follow organizations and other users, post to a social feed with likes and comments, message organizations in real time, and donate.
 
 **Organizations** post and manage opportunities, review and accept or reject applicants, build a following, and track engagement from a dashboard.
 
 **Admins** moderate users, organizations, and posts, and verify organizations before their opportunities go public.
 
-**Follow requests** work Instagram-style: a follow starts as *pending* and only counts once the target accepts, so follower counts and feeds reflect real, accepted relationships.
+**Follow requests** work Instagram-style: a follow starts as *pending* and only counts once the target accepts, so follower counts and feeds reflect real, accepted relationships. Profiles show a **Follow Back** action when someone already follows you, and clickable followers/following lists.
+
+**Personalized discovery** matches volunteers to opportunities and organizations by the interest categories they pick: the Opportunities page shows a "Recommended for you" strip, and the home feed suggests organizations that post in those categories.
 
 ## Architecture
 
@@ -65,10 +67,10 @@ For local development against your own MySQL and live-reload frontend, see [`PRO
 ## Roadmap
 
 - [x] Containerized stack (Docker + docker-compose)
-- [ ] CI pipeline (GitHub Actions: build, test, lint)
+- [x] CI pipeline (GitHub Actions: build, test)
 - [ ] Automated tests (JUnit + Mockito, Testcontainers) and Swagger/OpenAPI docs
 - [ ] Live demo deployment
-- [ ] Opportunity recommendation feature
+- [x] Personalized recommendations and organization suggestions
 
 ## License
 
