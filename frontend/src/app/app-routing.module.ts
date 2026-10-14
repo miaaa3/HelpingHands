@@ -34,8 +34,9 @@ const routes: Routes = [
   {path: 'notifications', component:NotificationsComponent, canActivate:[AuthGuard]},
   {path: 'dashboard', component:DashboardComponent, canActivate:[AuthGuard]},
   {path: 'admin', component:AdminDashboardComponent, canActivate:[AuthGuard, AdminGuard]},
-  {path: 'public/opportunities', component: PublicOpportunitiesComponent},
-  {path: 'public/organizations', component: PublicOrganizationsComponent},
+  // Public pages live under /explore: /public/* is the backend's public API.
+  {path: 'explore/opportunities', component: PublicOpportunitiesComponent},
+  {path: 'explore/organizations', component: PublicOrganizationsComponent},
 
 
 ];
