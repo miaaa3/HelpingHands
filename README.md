@@ -36,8 +36,8 @@ A full-stack volunteering platform that connects volunteers with organizations. 
 The entire stack runs with one command. You only need Docker installed.
 
 ```bash
-git clone https://github.com/miaaa3/Helping-handss.git
-cd Helping-handss
+git clone https://github.com/miaaa3/HelpingHands.git
+cd HelpingHands
 docker compose up --build
 ```
 
